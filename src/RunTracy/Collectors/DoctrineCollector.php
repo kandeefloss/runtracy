@@ -17,8 +17,8 @@
 
 namespace RunTracy\Collectors;
 
-use Slim\Container;
 use Doctrine\DBAL\Logging\DebugStack;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class DoctrineCollector
@@ -28,11 +28,11 @@ class DoctrineCollector
 {
     /**
      * DoctrineCollector constructor.
-     * @param Container|null $c
+     * @param ContainerInterface|null $c
      * @param string $containerName
      * @throws \Exception
      */
-    public function __construct(Container $c = null, $containerName = '')
+    public function __construct(ContainerInterface $c = null, $containerName = '')
     {
         if ($c === null || !$c->has($containerName)) {
             return 0;
