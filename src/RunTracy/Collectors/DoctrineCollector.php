@@ -28,16 +28,16 @@ class DoctrineCollector
 {
     /**
      * DoctrineCollector constructor.
-     * @param ContainerInterface|null $c
+     * @param ContainerInterface|null $container
      * @param string $containerName
      * @throws \Exception
      */
-    public function __construct(ContainerInterface $c = null, $containerName = '')
+    public function __construct(ContainerInterface $container = null, $containerName = '')
     {
-        if ($c === null || !$c->has($containerName)) {
+	    if ($container === null || !$container->has($containerName)) {
             return 0;
         }
-        $dm = $c->get($containerName);
+	    $dm = $container->get($containerName);
 
         // check instance
         switch (true) {
@@ -59,7 +59,7 @@ class DoctrineCollector
         }
 
         $conf->setSQLLogger(new DebugStack());
-        $c['doctrineConfig'] = $conf;
+	    $container->set('doctrineConfig', $conf);
 
         return true;
     }
