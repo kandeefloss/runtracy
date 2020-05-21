@@ -91,8 +91,8 @@ class ProfilerPanel implements IBarPanel
             }
         </style>
         ';
-        $table .= '<style>.tracy-addons-profiler-hidden{display:none}
-            .tracy-addons-profiler-bar{display:inline-block;margin:0;height:0.8em;}</style>';
+        $table .= '<style>#tracy-debug .tracy-addons-profiler-hidden{display:none}
+            #tracy-debug .tracy-addons-profiler-bar{display:inline-block;margin:0;height:0.8em;}</style>';
         $table .= '<table>';
         if ($this->config[self::CONFIG_SHOW][self::CONFIG_SHOW_MEMORY_USAGE_CHART]) {
             $table .= '<tr><td colspan="4" style="text-align: center">' . $this->getMemoryChart() . '</td></tr>';
