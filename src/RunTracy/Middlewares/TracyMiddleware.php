@@ -65,18 +65,21 @@ class TracyMiddleware
             $cookies = array_fill_keys($cookies, 1);
             $cfg = array_merge($def, $cookies);
         } else {
-            $cfg = $this->defcfg;
+            $cfg = [];
+        }
+
+        if (!class_exists('\Illuminate\Database\Capsule\Manager')) {
+            unset($this->defcfg['showEloquentORMPanel']);
         }
 
         if (isset($cfg['showEloquentORMPanel']) && $cfg['showEloquentORMPanel']) {
-            if (class_exists('\Illuminate\Database\Capsule\Manager')) {
-                Debugger::getBar()->addPanel(new \RunTracy\Helpers\EloquentORMPanel(
-                    \Illuminate\Database\Capsule\Manager::getQueryLog()
-                ));
-            } else {
-                // do not show in panel selector
-                unset($this->defcfg['showEloquentORMPanel']);
-            }
+            Debugger::getBar()->addPanel(new \RunTracy\Helpers\EloquentORMPanel(
+                \Illuminate\Database\Capsule\Manager::getQueryLog()
+            ));
+        }
+
+        if (!$this->container->has('twig_profile')) {
+        	unset($this->defcfg['showTwigPanel']);
         }
 
         if (isset($cfg['showTwigPanel']) && $cfg['showTwigPanel']) {
@@ -155,17 +158,16 @@ class TracyMiddleware
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\IdiormPanel());
         }
 
+        if (!class_exists('\Doctrine\DBAL\Connection') || !$this->container->has('doctrineConfig')) {
+        	unset($this->defcfg['showDoctrinePanel']);
+        }
+
         if (isset($cfg['showDoctrinePanel']) && $cfg['showDoctrinePanel']) {
-            if (class_exists('\Doctrine\DBAL\Connection') && $this->container->has('doctrineConfig')) {
-                Debugger::getBar()->addPanel(
-                    new \RunTracy\Helpers\DoctrinePanel(
-                        $this->container->get('doctrineConfig')->getSQLLogger()->queries
-                    )
-                );
-            } else {
-                // do not show in panel selector
-                unset($this->defcfg['showDoctrinePanel']);
-            }
+            Debugger::getBar()->addPanel(
+                new \RunTracy\Helpers\DoctrinePanel(
+                    $this->container->get('doctrineConfig')->getSQLLogger()->queries
+                )
+            );
         }
 
         // hardcoded without config prevent switch off
