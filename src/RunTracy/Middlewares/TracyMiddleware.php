@@ -29,9 +29,9 @@ use RunTracy\Helpers\PanelSelector;
  */
 class TracyMiddleware
 {
-    private $container;
-    private $defcfg;
-    private $versions;
+    protected $container;
+    protected $defcfg;
+    protected $versions;
 
     public function __construct(App $app = null)
     {
@@ -42,8 +42,7 @@ class TracyMiddleware
             $this->versions = [
                 'slim' => App::VERSION,
             ];
-            $this->defcfg = $this->container->has('settings.tracy')
-                ? $this->container->get('settings.tracy') : $this->container->get('settings')['tracy'];
+            $this->loadConfig();
             $this->runCollectors();
         }
     }
@@ -183,7 +182,16 @@ class TracyMiddleware
         return $res;
     }
 
-    private function runCollectors()
+    protected function loadConfig()
+    {
+    	if($this->container->has('settings.tracy')) {
+    		$this->defcfg = $this->container->get('settings.tracy');
+	    } else {
+    		$this->defcfg = $this->container->get('settings')['tracy'];
+	    }
+    }
+
+    protected function runCollectors()
     {
         if (isset($this->defcfg['showIdiormPanel']) && $this->defcfg['showIdiormPanel'] > 0) {
             if (class_exists('\ORM')) {
