@@ -77,13 +77,13 @@ class TracyMiddleware
             ));
         }
 
-        if (!$this->container->has('twig_profile')) {
+        if (!class_exists('\Twig\Profiler\Profile') || !$this->container->has('Twig\Profiler\Profile')) {
         	unset($this->defcfg['showTwigPanel']);
         }
 
         if (isset($cfg['showTwigPanel']) && $cfg['showTwigPanel']) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\TwigPanel(
-                $this->container->get('twig_profile')
+                $this->container->get('Twig\Profiler\Profile')
             ));
         }
 
